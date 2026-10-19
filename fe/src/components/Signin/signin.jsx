@@ -1,6 +1,27 @@
 import "./signin.css";
-
+import { useState } from "react";
+import { login, register } from "../../api/auth";
 function SignIn() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setMessage("");
+
+    try {
+      const data = await login(username, password);
+
+      // เก็บ JWT ไว้ใช้ทดสอบ API ที่ต้อง Login
+      sessionStorage.setItem("token", data.token);
+
+      setMessage("Login successful!");
+      console.log(data);
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
   return (
     <div className="signin-page">
       {/* Left Visual */}
@@ -47,14 +68,17 @@ function SignIn() {
             </p>
           </div>
 
-          <form className="signin-form">
+          <form className="signin-form" onSubmit={handleSubmit}>
             <div className="input-group">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-              />
+              <label htmlFor="username">Username</label>
+                <input
+                  id="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
             </div>
 
             <div className="input-group">
@@ -64,12 +88,15 @@ function SignIn() {
               </div>
 
               <input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
               />
             </div>
-
+            {message && <p>{message}</p>}
             <button type="submit" className="signin-button">
               Sign in
               <span>→</span>
@@ -87,7 +114,7 @@ function SignIn() {
 
           <p className="signup-text">
             Don't have an account?{" "}
-            <a href="/signup">Create one</a>
+            <a href="/register">Create one</a>
           </p>
         </div>
       </section>
