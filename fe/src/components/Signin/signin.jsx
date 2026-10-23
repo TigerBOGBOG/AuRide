@@ -1,6 +1,6 @@
 import "./signin.css";
 import { useState } from "react";
-import { login, register } from "../../api/auth";
+import { login} from "../../api/auth";
 function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

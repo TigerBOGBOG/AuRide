@@ -1,28 +1,10 @@
 import "./home.css";
+import Navbar from "../Navbar/Navbar";
 
 function Home() {
   return (
     <div className="home-page">
-      {/* Navbar */}
-      <nav className="home-navbar">
-        <div className="home-logo">
-          <div className="logo-icon">↗</div>
-          <span>Auride</span>
-        </div>
-
-        <div className="nav-links">
-          <a href="#home">Home</a>
-          <a href="#rides">My Rides</a>
-          <a href="#help">Help</a>
-        </div>
-
-        <div className="nav-profile">
-          <div className="profile-avatar">P</div>
-          <span>Pannarong</span>
-          <span className="profile-arrow">⌄</span>
-        </div>
-      </nav>
-
+      <Navbar/>
       {/* Hero */}
       <main className="home-main">
         <section className="hero-section">

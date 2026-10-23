@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CircleUserRound } from "lucide-react";
 import './signup.css';
 
 const Icon = ({ children }) => (
@@ -25,32 +26,30 @@ export default function Signup() {
           <path d="M32 5C19.5 5 10 14.6 10 26.5 10 42 32 59 32 59s22-17 22-32.5C54 14.6 44.5 5 32 5z" />
           <path d="M24 38l14-15M27 22h12v12" />
         </svg>
-        <h1>RideNow</h1>
+        <h1>Auride</h1>
         <p>Your ride. Your way.</p>
       </header>
 
       <form className="rn-form" onSubmit={(e) => e.preventDefault()}>
         <h2>Create your account</h2>
-        <p className="rn-sub">Join RideNow and go anywhere, safely.</p>
+        <p className="rn-sub">Join Auride and go anywhere, safely.</p>
 
         <label className="rn-field sm">
           <Icon><circle cx="12" cy="8" r="4" /><path d="M4 20c1-4 4.5-6 8-6s7 2 8 6" /></Icon>
-          <span className="rn-sr">Full name</span>
-          <input type="text" placeholder="Full name" autoComplete="name" />
+          <span className="rn-sr">Name</span>
+          <input type="text" placeholder="Name" autoComplete="name" />
         </label>
 
         <label className="rn-field sm">
-          <Icon><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M4 7l8 6 8-6" /></Icon>
-          <span className="rn-sr">Email address</span>
-          <input type="email" placeholder="Email address" autoComplete="email" />
+          <CircleUserRound size={20} strokeWidth={1.8} />
+          <span className="rn-sr">Username</span>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            autoComplete="username"
+          />
         </label>
-
-        <label className="rn-field sm">
-          <Icon><rect x="7" y="2.5" width="10" height="19" rx="2.5" /><path d="M11 18.5h2" /></Icon>
-          <span className="rn-sr">Phone number</span>
-          <input type="tel" placeholder="Phone number" autoComplete="tel" />
-        </label>
-
         <label className="rn-field sm">
           <Icon><rect x="5" y="11" width="14" height="9" rx="2.5" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></Icon>
           <span className="rn-sr">Password</span>
