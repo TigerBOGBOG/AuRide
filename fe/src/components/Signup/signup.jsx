@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { CircleUserRound } from 'lucide-react';
 import './signup.css';
 import { register } from '../../api/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Icon = ({ children }) => (
   <svg
@@ -36,6 +37,7 @@ export default function Signup() {
   const [message, setMessage] = useState('');
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const score = password ? strength(password) : 0;
 
@@ -54,7 +56,7 @@ export default function Signup() {
 
     try {
       const data = await register(name, username, password);
-
+      navigate('/login');
       setMessage('Registration successful!');
       console.log(data);
     } catch (error) {

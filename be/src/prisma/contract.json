@@ -12,6 +12,25 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "Role": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "USER",
+                "value": "USER"
+              },
+              {
+                "name": "DRIVER",
+                "value": "DRIVER"
+              },
+              {
+                "name": "ADMIN",
+                "value": "ADMIN"
+              }
+            ]
+          }
+        },
         "models": {
           "User": {
             "fields": {
@@ -22,11 +41,31 @@
                   "kind": "scalar"
                 }
               },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "password": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                }
+              },
+              "role": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Role",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "username": {
@@ -43,8 +82,14 @@
                 "id": {
                   "column": "id"
                 },
+                "name": {
+                  "column": "name"
+                },
                 "password": {
                   "column": "password"
+                },
+                "role": {
+                  "column": "role"
                 },
                 "username": {
                   "column": "username"
@@ -64,6 +109,13 @@
         "entries": {
           "table": {
             "User": {
+              "checks": [
+                {
+                  "expression": "\"role\" IN ('USER', 'DRIVER', 'ADMIN')",
+                  "name": "User_role_check_dd4f67c2",
+                  "prefix": "User_role_check"
+                }
+              ],
               "columns": {
                 "id": {
                   "codecId": "pg/int4@1",
@@ -74,10 +126,30 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "password": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "role": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "USER"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Role",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "username": {
                   "codecId": "pg/text@1",
@@ -100,13 +172,23 @@
                 }
               ]
             }
+          },
+          "valueSet": {
+            "Role": {
+              "kind": "valueSet",
+              "values": [
+                "USER",
+                "DRIVER",
+                "ADMIN"
+              ]
+            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "f1c0ae3cce3d84a16d907f97c0d1db4f66111eb0e68d399a1852ec7336bc7deb"
+    "storageHash": "f480c00ca7f11194d1348d1764da734e4ea7f21636687279f9cdb1a473355cf0"
   },
   "capabilities": {
     "postgres": {

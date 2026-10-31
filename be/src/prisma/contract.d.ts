@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'f1c0ae3cce3d84a16d907f97c0d1db4f66111eb0e68d399a1852ec7336bc7deb'>;
+  StorageHashBase<'f480c00ca7f11194d1348d1764da734e4ea7f21636687279f9cdb1a473355cf0'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -251,7 +251,9 @@ export type FieldOutputTypes = {
   readonly public: {
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
+      readonly role: 'USER' | 'DRIVER' | 'ADMIN';
       readonly username: CodecTypes['pg/text@1']['output'];
     };
   };
@@ -260,7 +262,9 @@ export type FieldInputTypes = {
   readonly public: {
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
+      readonly role: 'USER' | 'DRIVER' | 'ADMIN';
       readonly username: CodecTypes['pg/text@1']['input'];
     };
   };
@@ -269,7 +273,9 @@ export type StorageColumnTypes = {
   readonly public: {
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
+      readonly role: 'USER' | 'DRIVER' | 'ADMIN';
       readonly username: CodecTypes['pg/text@1']['output'];
     };
   };
@@ -278,7 +284,9 @@ export type StorageColumnInputTypes = {
   readonly public: {
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
+      readonly role: 'USER' | 'DRIVER' | 'ADMIN';
       readonly username: CodecTypes['pg/text@1']['input'];
     };
   };
@@ -287,7 +295,9 @@ export type StorageColumnInputTypes = {
 export namespace Models {
   export type public_User = {
     id: CodecTypes['pg/int4@1']['output'];
+    name: CodecTypes['pg/text@1']['output'];
     password: CodecTypes['pg/text@1']['output'];
+    role: 'USER' | 'DRIVER' | 'ADMIN';
     username: CodecTypes['pg/text@1']['output'];
     readonly [RelationKeys]?: never;
   };
@@ -328,10 +338,24 @@ type ContractBase = Omit<
                     readonly expression: 'autoincrement()';
                   };
                 };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
                 readonly password: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
+                };
+                readonly role: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'USER'>;
+                  };
                 };
                 readonly username: {
                   readonly nativeType: 'text';
@@ -343,6 +367,12 @@ type ContractBase = Omit<
               uniques: readonly [{ readonly columns: readonly ['username'] }];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+          };
+          readonly valueSet: {
+            readonly Role: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['USER', 'DRIVER', 'ADMIN'];
             };
           };
         };
@@ -367,7 +397,15 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly password: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly role: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -382,10 +420,22 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
+                readonly name: { readonly column: 'name' };
                 readonly password: { readonly column: 'password' };
+                readonly role: { readonly column: 'role' };
                 readonly username: { readonly column: 'username' };
               };
             };
+          };
+        };
+        readonly enum: {
+          readonly Role: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'USER'; readonly value: 'USER' },
+              { readonly name: 'DRIVER'; readonly value: 'DRIVER' },
+              { readonly name: 'ADMIN'; readonly value: 'ADMIN' },
+            ];
           };
         };
       };

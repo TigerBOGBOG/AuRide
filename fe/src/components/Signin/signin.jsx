@@ -1,10 +1,14 @@
 import "./signin.css";
 import { useState } from "react";
 import { login} from "../../api/auth";
+import { useNavigate } from 'react-router-dom';
+
 function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -15,7 +19,7 @@ function SignIn() {
 
       // เก็บ JWT ไว้ใช้ทดสอบ API ที่ต้อง Login
       sessionStorage.setItem("token", data.token);
-
+      navigate('/');
       setMessage("Login successful!");
       console.log(data);
     } catch (error) {

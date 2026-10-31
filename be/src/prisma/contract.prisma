@@ -1,8 +1,16 @@
 // use prisma-8
 // Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
 
+enum Role {
+  USER
+  DRIVER
+  ADMIN
+}
+
 model User {
   id       Int    @id @default(autoincrement())
+  name     String
   username String @unique
   password String
+  role     Role   @default(USER)
 }

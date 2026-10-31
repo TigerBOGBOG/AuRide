@@ -9,12 +9,14 @@ const router = express.Router();
 // Register
 router.post("/register", async (req, res) => {
   try {
-    const { username, password } = req.body ?? {};
+    const { name,username,password } = req.body ?? {};
 
     // Validate input
     if (
+      typeof name !== "string" ||
       typeof username !== "string" ||
       typeof password !== "string" ||
+      !name.trim() ||
       !username.trim() ||
       !password
     ) {
@@ -39,6 +41,7 @@ router.post("/register", async (req, res) => {
 
     // Create user
     const user = await db.orm.public.User.create({
+      name: name.trim(),
       username: username.trim(),
       password: hashedPassword,
     });
@@ -72,7 +75,7 @@ router.post("/login", async (req, res) => {
       !password
     ) {
       return res.status(400).json({
-        message: "Username and password are required",
+        message: "Name, username and password are required",
       });
     }
 
