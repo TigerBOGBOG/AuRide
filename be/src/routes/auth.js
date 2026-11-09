@@ -3,6 +3,8 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { db } from "../prisma/db.ts";
+import { authenticate } from "../middleware/auth.js";
+import { authorize } from "../middleware/authorize.js";
 
 const router = express.Router();
 
@@ -130,45 +132,37 @@ router.post("/login", async (req, res) => {
     });
   }
 });
-
-// Protected route
-router.get("/protected", (req, res) => {
-  const authHeader = req.headers.authorization;
-
-  const token =
-    authHeader?.startsWith("Bearer ")
-      ? authHeader.slice(7)
-      : null;
-
-  if (!token) {
-    return res.status(401).json({
-      message: "No token provided",
+// Allow authenticated drivers only
+router.get(
+  "/driver-only",
+  authenticate,
+  authorize("DRIVER"),
+  (req, res) => {
+    res.json({
+      message: "Welcome Driver",
+      user: req.user,
     });
   }
-
-  if (!process.env.JWT_SECRET) {
-    console.error("JWT_SECRET is not configured");
-
-    return res.status(500).json({
-      message: "Internal server error",
+);
+// Allow authenticated admin only
+router.get(
+  "/admin-only",
+  authenticate,
+  authorize("ADMIN"),
+  (req, res) => {
+    res.json({
+      message: "Welcome Admin",
+      user: req.user,
     });
   }
-
-  try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
-
-    return res.status(200).json({
-      message: "Protected route",
-      user: decoded,
-    });
-  } catch {
-    return res.status(401).json({
-      message: "Invalid or expired token",
-    });
-  }
+);
+// Test authentication: Allow any authenticated user
+router.get("/test-auth", authenticate, (req, res) => {
+  res.json({
+    message: "Authentication successful",
+    user: req.user,
+  });
 });
+
 
 export default router;

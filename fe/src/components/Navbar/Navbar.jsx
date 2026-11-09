@@ -3,27 +3,48 @@ import { useState, useEffect } from "react";
 import "./Navbar.css";
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    () => Boolean(sessionStorage.getItem("token"))
-  );
-
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const syncLogin = () => {
-      setIsLoggedIn(Boolean(sessionStorage.getItem("token")));
-    };
+    async function fetchUser() {
+      const token = sessionStorage.getItem("token");
 
-    window.addEventListener("storage", syncLogin);
+      if (!token) {
+        setUser(null);
+        return;
+      }
 
-    return () => {
-      window.removeEventListener("storage", syncLogin);
-    };
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/auth/test-auth",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          sessionStorage.removeItem("token");
+          setUser(null);
+          return;
+        }
+
+        const data = await response.json();
+        setUser(data.user);
+      } catch (error) {
+        console.error("Fetch user error:", error);
+        setUser(null);
+      }
+    }
+
+    fetchUser();
   }, []);
 
   function handleLogout() {
     sessionStorage.removeItem("token");
-    setIsLoggedIn(false);
+    setUser(null);
     navigate("/login");
   }
 
@@ -31,7 +52,30 @@ function Navbar() {
     <nav>
       <Link to="/">AuRide</Link>
 
-      {isLoggedIn ? (
+      {user?.role === "USER" && (
+        <>
+          <Link to="/home">Home</Link>
+          <Link to="/book-ride">Book Ride</Link>
+          <Link to="/my-rides">My Rides</Link>
+        </>
+      )}
+
+      {user?.role === "DRIVER" && (
+        <>
+          <Link to="/available-rides">Available Rides</Link>
+          <Link to="/my-jobs">My Jobs</Link>
+        </>
+      )}
+
+      {user?.role === "ADMIN" && (
+        <>
+          <Link to="/admin">Dashboard</Link>
+          <Link to="/admin/users">Users</Link>
+          <Link to="/admin/rides">Rides</Link>
+        </>
+      )}
+
+      {user ? (
         <div>
           <Link to="/profile">Profile</Link>
           <button onClick={handleLogout}>Logout</button>

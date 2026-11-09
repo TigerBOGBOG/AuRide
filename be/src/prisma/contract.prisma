@@ -7,10 +7,63 @@ enum Role {
   ADMIN
 }
 
+enum RideStatus {
+  REQUESTED
+  ACCEPTED
+  ARRIVING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  username String @unique
-  password String
-  role     Role   @default(USER)
+  id        Int      @id @default(autoincrement())
+  name      String
+  username  String   @unique
+  password  String
+  role      Role     @default(USER)
+
+  phone       String? @unique
+  profileImage String?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  passengerRides Ride[] @relation("PassengerRides")
+  driverRides    Ride[] @relation("DriverRides")
+
+  riderLocation RiderLocation?
+}
+
+model Ride {
+  id Int @id @default(autoincrement())
+
+  passengerId Int
+  driverId    Int?
+
+  pickupLocation  String
+  dropoffLocation String
+
+  status RideStatus @default(REQUESTED)
+
+  passenger User  @relation("PassengerRides", fields: [passengerId], references: [id])
+  driver    User? @relation("DriverRides", fields: [driverId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  
+}
+model RiderLocation {
+  id        Int      @id @default(autoincrement())
+  riderId   Int      @unique
+  latitude  Float
+  longitude Float
+  isOnline  Boolean  @default(false)
+  updatedAt DateTime
+
+  rider User @relation(fields: [riderId], references: [id])
+
+  @@index([isOnline, updatedAt])
 }
