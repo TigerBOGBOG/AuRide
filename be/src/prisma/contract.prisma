@@ -51,8 +51,7 @@ model Ride {
   driver    User? @relation("DriverRides", fields: [driverId], references: [id])
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
+  updatedAt DateTime 
   
 }
 model RiderLocation {
@@ -61,7 +60,7 @@ model RiderLocation {
   latitude  Float
   longitude Float
   isOnline  Boolean  @default(false)
-  updatedAt DateTime
+  updatedAt DateTime 
 
   rider User @relation(fields: [riderId], references: [id])
 
